@@ -3,6 +3,7 @@ var formidable = require("formidable");
 var fs = require("fs");
 var jade = require("jade");
 var path = require("path");
+var http = require("http");
 
 function start(request, response) {
         console.log("Request handler 'start' was called.");
@@ -12,7 +13,6 @@ function start(request, response) {
 function upload(request, response) {
         console.log("Request handler 'upload' was called.");
         console.log('About to parse...');
-        console.log(request);
         var form = new formidable.IncomingForm();
         form.parse(request, function(error, fields, files) {
                 console.log('Parsing done.');
@@ -52,17 +52,24 @@ app.configure(function() {
         app.set('views', __dirname + '/views');
         app.set('view engine', 'jade');
         app.use(express.favicon());
-        app.use(express.logger('dev'));
+        app.use(express.cookieParser('segretissimo'));
+        app.use(express.session());
         //        app.use(express.bodyParser());
         //        app.use(express.methodOverride());
         //        app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
 });
 
-console.log("Application is listening on port 8888 (with express).")
+app.configure('development', function() {
+        app.use(express.logger('dev'));
+        app.use(express.errorHandler());
+});
+
 app.get('/', start);
 app.get('/start', start);
 app.post('/upload', upload);
 app.get('/show', show);
 
-app.listen(8888);
+http.createServer(app).listen(app.get('port'), function() {
+        console.log("Application is listening on port " + app.get('port') + " (with express).")
+});
