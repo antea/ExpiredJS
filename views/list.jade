@@ -2,20 +2,27 @@
 html
   head
     meta(http-equiv='Content-Type', content='text/html;charset=UTF-8')
+    link(rel='stylesheet', href='/stylesheets/expiredjs.css')
   body
-    h2 Lista
-    table
-      tr
-        td Nome
-        td Scadenza
-        td X
-      each row in rows  
+    h2 Benvenuto in ExpiredJS
+    .fridge
+      p Questa è la lista con il contenuto del tuo frigorifero.
+      table
         tr
-          td #{row.name}
-          td #{dateFormat(new Date(row.expires), "mmmm dS")}
           td
-            a(href='/del/?n=#{row.name}') X
-    form(action='/add', enctype='multipart/form-data', method='POST')
-      input(type='text', name='name')
-      input(type='date', name='expires')
-      input(type='submit', value='Aggiungi')                
+          td Nome
+          td Scadenza
+        each row in rows  
+          tr
+            td
+              a(href='/del/?n=#{row.name}') X
+            td= row.name
+            td= dateFormat(new Date(row.expires), "mmmm dS")
+    .addform
+      p Puoi aggiungere un nuovo oggetto.
+      form(action='/add', enctype='multipart/form-data', method='POST')
+        .caption Nome
+        input(type='text', name='name')
+        .caption Data di scadenza
+        input(type='date', name='expires')
+        input(type='submit', value='Aggiungi')                

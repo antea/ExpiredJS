@@ -7,18 +7,6 @@ var dateFormat = require("dateformat");
 var url = require("url");
 var querystring = require("querystring");
 
-// Database initialization
-var db = new sqlite3.Database(':memory:');
-db.run('create table items (name text, expires datetime)', function() {
-        var st = db.prepare("insert into items values(?,?)", function() {
-                for(var i = 10; i >= 0; i--) {
-                        var date = new Date();
-                        date.setMonth(i);
-                        st.run("Item " + i, date);
-                }
-        });
-});
-
 function add(request, response) {
         var name = request.param('name', null);
         var expires = request.param('expires', null);
@@ -56,7 +44,7 @@ app.configure(function() {
         app.set('port', process.env.PORT || 8888);
         app.set('views', __dirname + '/views');
         app.set('view engine', 'jade');
-        app.use(express.favicon());
+        app.use(express.favicon(path.join(__dirname, '/public/images/favicon.ico')));
         app.use(express.cookieParser('segretissimo'));
         app.use(express.session());
         app.use(express.bodyParser());
@@ -68,6 +56,21 @@ app.configure(function() {
 
 app.configure('development', function() {
         app.use(express.logger('dev'));
+        app.set('db_url', ':memory:');
+});
+
+// Database initialization
+var db = new sqlite3.Database(app.get('db_url'));
+app.configure('development', function() {
+        db.run('create table items (name text, expires datetime)', function() {
+                var st = db.prepare("insert into items values(?,?)", function() {
+                        for(var i = 10; i >= 0; i--) {
+                                var date = new Date();
+                                date.setMonth(i);
+                                st.run("Item " + i, date);
+                        }
+                });
+        });
 });
 
 app.get('/', list);
