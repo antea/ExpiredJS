@@ -1,0 +1,10 @@
+{
+  "name": "expiredjs",
+  "description": "ExpiredJS application tracks expiring food in your fridge.",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "formidable": "1.x"
+  }
+}

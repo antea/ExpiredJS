@@ -1,21 +1,20 @@
-var exec = require("child_process").exec;
-var querystring = require("querystring");
+var express = require("express");
+var formidable = require("formidable");
 var fs = require("fs");
-var formidable = require("formidable")
 
-function start(response) {
-                console.log("Request handler 'start' was called.");
+function start(request, response) {
+        console.log("Request handler 'start' was called.");
 
-                var body = '<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/></head>' + '<body>' + '<form action="/upload" enctype="multipart/form-data" method="post">' + '<input type="file" name="upload"/>' + '<input type="submit" value="Upload File"/>' + '</form></body></html>';
+        var body = '<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/></head>' + '<body>' + '<form action="/upload" enctype="multipart/form-data" method="post">' + '<input type="file" name="upload"/>' + '<input type="submit" value="Upload File"/>' + '</form></body></html>';
 
-                response.writeHead(200, {
-                        "Content-Type": "text/html"
-                });
-                response.write(body);
-                response.end();
-        }
+        response.writeHead(200, {
+                "Content-Type": "text/html"
+        });
+        response.write(body);
+        response.end();
+}
 
-function upload(response, request) {
+function upload(request, response) {
         console.log("Request handler 'upload' was called.");
 
         var form = new formidable.IncomingForm();
@@ -37,7 +36,7 @@ function upload(response, request) {
         });
 }
 
-function show(response) {
+function show(request, response) {
         console.log("Request handler 'show' was called.");
         fs.readFile("/tmp/test.png", "binary", function(error, file) {
                 if(error) {
@@ -56,6 +55,13 @@ function show(response) {
         });
 }
 
-exports.start = start;
-exports.upload = upload;
-exports.show = show;
+
+(function() {
+        var app = express();
+        app.listen(8888);
+        console.log("Application is listening on port 8888 (with express).")
+        app.get('/', start);
+        app.get('/start', start);
+        app.post('/upload', upload);
+        app.get('/show', show);
+})();
