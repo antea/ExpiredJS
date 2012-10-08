@@ -4,6 +4,19 @@ var fs = require("fs");
 var jade = require("jade");
 var path = require("path");
 var http = require("http");
+var sqlite3 = require("sqlite3").verbose();
+
+// Database initialization
+var db = new sqlite3.Database(':memory:');
+db.run('create table items (name text, expires datetime)', function() {
+        var st = db.prepare("insert into items values(?,?)", function() {
+                for(var i = 10; i >= 0; i--) {
+                        var date = new Date();
+                        date.setMonth(i);
+                        st.run("Item " + i, date);
+                }
+        });
+});
 
 function start(request, response) {
         console.log("Request handler 'start' was called.");
@@ -44,6 +57,25 @@ function show(request, response) {
         });
 }
 
+function add(request, response) {
+        var name = request.param('name', null);
+        var expires = request.param('expires', null);
+        db.prepare('insert into items values(?, ?)').run(name, expires, function() {
+                response.writeHead(302, {
+                        Location: "/list"
+                });
+                response.end();
+        });
+}
+
+function list(request, response) {
+        db.all('select * from items order by expires desc', function(err, rows) {
+                response.render('list.jade', {
+                        rows: rows
+                });
+        });
+}
+
 
 var app = express();
 
@@ -54,7 +86,7 @@ app.configure(function() {
         app.use(express.favicon());
         app.use(express.cookieParser('segretissimo'));
         app.use(express.session());
-        //        app.use(express.bodyParser());
+        app.use(express.bodyParser());
         //        app.use(express.methodOverride());
         //        app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
@@ -65,11 +97,14 @@ app.configure('development', function() {
         app.use(express.errorHandler());
 });
 
-app.get('/', start);
+app.get('/', list);
+app.get('/list', list);
+app.post('/add', add);
+// From the tutorial
 app.get('/start', start);
 app.post('/upload', upload);
 app.get('/show', show);
 
 http.createServer(app).listen(app.get('port'), function() {
-        console.log("Application is listening on port " + app.get('port') + " (with express).")
+        console.log("ExpiredJS is listening on port " + app.get('port') + " (with express).")
 });
