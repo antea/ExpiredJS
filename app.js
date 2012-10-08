@@ -1,24 +1,19 @@
 var express = require("express");
 var formidable = require("formidable");
 var fs = require("fs");
+var jade = require("jade");
+var path = require("path");
 
 function start(request, response) {
         console.log("Request handler 'start' was called.");
-
-        var body = '<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/></head>' + '<body>' + '<form action="/upload" enctype="multipart/form-data" method="post">' + '<input type="file" name="upload"/>' + '<input type="submit" value="Upload File"/>' + '</form></body></html>';
-
-        response.writeHead(200, {
-                "Content-Type": "text/html"
-        });
-        response.write(body);
-        response.end();
+        response.render('start.jade');
 }
 
 function upload(request, response) {
         console.log("Request handler 'upload' was called.");
-
-        var form = new formidable.IncomingForm();
         console.log('About to parse...');
+        console.log(request);
+        var form = new formidable.IncomingForm();
         form.parse(request, function(error, fields, files) {
                 console.log('Parsing done.');
                 fs.rename(files.upload.path, "/tmp/test.png", function(err) {
@@ -27,12 +22,7 @@ function upload(request, response) {
                                 fs.rename(files.upload.path, "/tmp/test.png");
                         }
                 });
-                response.writeHead(200, {
-                        "Content-Type": "text/html"
-                });
-                response.write('Received image:<br>');
-                response.write('<img src="/show"/>');
-                response.end();
+                response.render('upload.jade');
         });
 }
 
@@ -44,24 +34,35 @@ function show(request, response) {
                                 "Content-Type": "text/plain"
                         });
                         response.write(err + "\n");
-                        response.end();
                 } else {
                         response.writeHead(200, {
                                 "Content-Type": "image/png"
                         });
                         response.write(file, "binary");
-                        response.end();
                 }
+                response.end();
         });
 }
 
 
-(function() {
-        var app = express();
-        app.listen(8888);
-        console.log("Application is listening on port 8888 (with express).")
-        app.get('/', start);
-        app.get('/start', start);
-        app.post('/upload', upload);
-        app.get('/show', show);
-})();
+var app = express();
+
+app.configure(function() {
+        app.set('port', process.env.PORT || 8888);
+        app.set('views', __dirname + '/views');
+        app.set('view engine', 'jade');
+        app.use(express.favicon());
+        app.use(express.logger('dev'));
+        //        app.use(express.bodyParser());
+        //        app.use(express.methodOverride());
+        //        app.use(app.router);
+        app.use(express.static(path.join(__dirname, 'public')));
+});
+
+console.log("Application is listening on port 8888 (with express).")
+app.get('/', start);
+app.get('/start', start);
+app.post('/upload', upload);
+app.get('/show', show);
+
+app.listen(8888);
