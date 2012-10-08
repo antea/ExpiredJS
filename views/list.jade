@@ -8,10 +8,13 @@ html
       tr
         td Nome
         td Scadenza
+        td X
       each row in rows  
         tr
           td #{row.name}
-          td #{new Date(row.expires).toUTCString()}
+          td #{dateFormat(new Date(row.expires), "mmmm dS")}
+          td
+            a(href='/del/?n=#{row.name}') X
     form(action='/add', enctype='multipart/form-data', method='POST')
       input(type='text', name='name')
       input(type='date', name='expires')

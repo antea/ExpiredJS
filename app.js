@@ -5,6 +5,9 @@ var jade = require("jade");
 var path = require("path");
 var http = require("http");
 var sqlite3 = require("sqlite3").verbose();
+var dateFormat = require("dateformat");
+var url = require("url");
+var querystring = require("querystring");
 
 // Database initialization
 var db = new sqlite3.Database(':memory:');
@@ -71,11 +74,22 @@ function add(request, response) {
 function list(request, response) {
         db.all('select * from items order by expires desc', function(err, rows) {
                 response.render('list.jade', {
-                        rows: rows
+                        rows: rows,
+                        dateFormat: dateFormat
                 });
         });
 }
 
+function del(request, response) {
+        var name = querystring.parse(url.parse(request.url).query)['n'];
+        console.log(name);
+        db.prepare('delete from items where name=?').run(name, function() {
+                response.writeHead(302, {
+                        Location: "/list"
+                });
+                response.end();
+        });
+}
 
 var app = express();
 
@@ -87,6 +101,7 @@ app.configure(function() {
         app.use(express.cookieParser('segretissimo'));
         app.use(express.session());
         app.use(express.bodyParser());
+        app.use(express.errorHandler());
         //        app.use(express.methodOverride());
         //        app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
@@ -94,12 +109,12 @@ app.configure(function() {
 
 app.configure('development', function() {
         app.use(express.logger('dev'));
-        app.use(express.errorHandler());
 });
 
 app.get('/', list);
 app.get('/list', list);
 app.post('/add', add);
+app.get('/del', del);
 // From the tutorial
 app.get('/start', start);
 app.post('/upload', upload);
