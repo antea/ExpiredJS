@@ -5,6 +5,14 @@ body {
         background: #f2f8f0; 
 }
 
-.addform {
+#addForm {
         background: #f2f8f0; 
+}
+
+.green {
+        background: #88ff88;
+}
+
+.hidden {
+        display: none;        
 }
