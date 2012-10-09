@@ -11,16 +11,17 @@ function add(request, response) {
         var name = request.param('name', null);
         var expires = request.param('expires', null);
         db.prepare('insert into items values(?, ?)').run(name, expires, function() {
-                response.writeHead(302, {
-                        Location: "/list"
-                });
                 response.end();
         });
 }
 
 function list(request, response) {
+        response.render('list.jade');
+}
+
+function fridge(request, response) {
         db.all('select * from items order by expires desc', function(err, rows) {
-                response.render('list.jade', {
+                response.render('fridge.jade', {
                         rows: rows,
                         dateFormat: dateFormat
                 });
@@ -75,6 +76,7 @@ app.configure('development', function() {
 
 app.get('/', list);
 app.get('/list', list);
+app.get('/fridge', fridge);
 app.post('/add', add);
 app.get('/del', del);
 

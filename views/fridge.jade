@@ -1,0 +1,11 @@
+table.fridge
+  tr
+    td
+    td Nome
+    td Scadenza
+  each row in rows  
+    tr
+      td
+        a(href='/del/?n=#{row.name}') X
+      td= row.name
+      td= dateFormat(new Date(row.expires), "mmmm dS yyyy")

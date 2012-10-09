@@ -3,35 +3,20 @@ html
   head
     meta(http-equiv='Content-Type', content='text/html;charset=UTF-8')
     script(type='text/javascript', src='/javascript/jquery-1.8.2.js')
-    script(type="text/javascript")
-      $(document).ready(function() {
-        $(".fridge td").hover(
-            function() { $(this).addClass("green"); }, 
-            function() { $(this).removeClass("green"); }
-        );
-        $("#addItem").click(function(){ $("#addForm").fadeIn('fast');});
-      });
+    script(type='text/javascript', src='/javascript/jquery-ui-1.9.0.js')
+    script(type="text/javascript", src='/javascript/list.js')
+    link(rel='stylesheet', href='/stylesheets/jquery-ui-1.9.0.custom.css')
     link(rel='stylesheet', href='/stylesheets/expiredjs.css')
   body
     h2 Benvenuto in ExpiredJS
     p Questa è la lista con il contenuto del tuo frigorifero.
-    table.fridge
-      tr
-        td
-        td Nome
-        td Scadenza
-      each row in rows  
-        tr
-          td
-            a(href='/del/?n=#{row.name}') X
-          td= row.name
-          td= dateFormat(new Date(row.expires), "mmmm dS")
-    a#addItem Aggiungi un item
-    #addForm.hidden
+    button#addButton Aggiungi un item
+    #fridge
+    #addDialog.hidden
       p Puoi aggiungere un nuovo oggetto.
-      form(action='/add', enctype='multipart/form-data', method='POST')
+      form#addForm(action='/add', enctype='multipart/form-data', method='POST')
         .caption Nome
-        input(type='text', name='name')
+        input#inputName(type='text', name='name')
         .caption Data di scadenza
-        input(type='date', name='expires')
+        input#inputExpires(type='text', name='expires')
         input(type='submit', value='Aggiungi')                
