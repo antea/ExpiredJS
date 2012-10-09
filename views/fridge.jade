@@ -6,6 +6,6 @@ table.fridge
   each row in rows  
     tr
       td
-        a(href='/del/?n=#{row.name}') X
+        a.deleteButton(href='/del/#{row.name}', title="Cancella #{row.name}") x
       td= row.name
       td= dateFormat(new Date(row.expires), "mmmm dS yyyy")

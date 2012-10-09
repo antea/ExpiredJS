@@ -8,8 +8,8 @@ var url = require("url");
 var querystring = require("querystring");
 
 function add(request, response) {
-        var name = request.param('name', null);
-        var expires = request.param('expires', null);
+        var name = request.body.name;
+        var expires = request.body.expires;
         db.prepare('insert into items values(?, ?)').run(name, expires, function() {
                 response.end();
         });
@@ -20,7 +20,7 @@ function list(request, response) {
 }
 
 function fridge(request, response) {
-        db.all('select * from items order by expires desc', function(err, rows) {
+        db.all('select * from items order by expires', function(err, rows) {
                 response.render('fridge.jade', {
                         rows: rows,
                         dateFormat: dateFormat
@@ -29,12 +29,8 @@ function fridge(request, response) {
 }
 
 function del(request, response) {
-        var name = querystring.parse(url.parse(request.url).query)['n'];
-        console.log(name);
+        var name = request.params.name;
         db.prepare('delete from items where name=?').run(name, function() {
-                response.writeHead(302, {
-                        Location: "/list"
-                });
                 response.end();
         });
 }
@@ -78,7 +74,7 @@ app.get('/', list);
 app.get('/list', list);
 app.get('/fridge', fridge);
 app.post('/add', add);
-app.get('/del', del);
+app.get('/del/:name', del);
 
 http.createServer(app).listen(app.get('port'), function() {
         console.log("ExpiredJS is listening on port " + app.get('port') + " (with express).")

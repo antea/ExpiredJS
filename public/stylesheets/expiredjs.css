@@ -1,17 +1,7 @@
 body {
-}
-
-.fridge {
-        background: #f2f8f0; 
-}
-
-#addDialog {
-        background: #f2f8f0; 
-}
-
-.green {
-        background: #88ff88;
-}
+        font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif; 
+        font-size: 0.8em;
+}​
 
 .hidden {
         display: none;        
