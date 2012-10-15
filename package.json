@@ -8,6 +8,7 @@
                 "jade": "*",
                 "sqlite3": "*",
                 "dateformat": "*",
-                "jquery": "*"
+                "nodeunit": "*",
+                "should": "*"
         }
 }

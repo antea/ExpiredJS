@@ -49,12 +49,13 @@ app.configure(function() {
         app.use(express.static(path.join(__dirname, 'public')));
 });
 
+
 app.configure('development', function() {
         app.use(express.logger('dev'));
         app.set('db_url', ':memory:');
 });
 
-data.init(app);
+data.init(app.get('db_url'));
 
 app.get('/', list);
 app.get('/list', list);
