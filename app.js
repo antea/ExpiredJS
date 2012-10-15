@@ -55,7 +55,9 @@ app.configure('development', function() {
         app.set('db_url', ':memory:');
 });
 
-data.init(app.get('db_url'));
+data.init(app.get('db_url'), function() {
+        data.populate();
+});
 
 app.get('/', list);
 app.get('/list', list);
