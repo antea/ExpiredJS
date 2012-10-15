@@ -2,15 +2,13 @@ var express = require("express");
 var jade = require("jade");
 var path = require("path");
 var http = require("http");
-var sqlite3 = require("sqlite3").verbose();
+var data = require("./data");
 var dateFormat = require("dateformat");
 var url = require("url");
 var querystring = require("querystring");
 
 function add(request, response) {
-        var name = request.body.name;
-        var expires = request.body.expires;
-        db.prepare('insert into items values(?, ?)').run(name, expires, function() {
+        data.add(request.body.name, request.body.expires, function() {
                 response.end();
         });
 }
@@ -20,7 +18,7 @@ function list(request, response) {
 }
 
 function fridge(request, response) {
-        db.all('select * from items order by expires', function(err, rows) {
+        data.all(function(err, rows) {
                 response.render('fridge.jade', {
                         rows: rows,
                         dateFormat: dateFormat
@@ -29,8 +27,7 @@ function fridge(request, response) {
 }
 
 function del(request, response) {
-        var name = request.params.name;
-        db.prepare('delete from items where name=?').run(name, function() {
+        data.del(request.params.name, function() {
                 response.end();
         });
 }
@@ -56,19 +53,7 @@ app.configure('development', function() {
         app.set('db_url', ':memory:');
 });
 
-// Database initialization
-var db = new sqlite3.Database(app.get('db_url'));
-app.configure('development', function() {
-        db.run('create table items (name text, expires datetime)', function() {
-                var st = db.prepare("insert into items values(?,?)", function() {
-                        for(var i = 10; i >= 0; i--) {
-                                var date = new Date();
-                                date.setMonth(i);
-                                st.run("Item " + i, date);
-                        }
-                });
-        });
-});
+data.init(app);
 
 app.get('/', list);
 app.get('/list', list);
