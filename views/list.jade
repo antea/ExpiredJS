@@ -11,12 +11,18 @@ html
     h1 Welcome in ExpiredJS
     p This is the content of your fridge.
     button#addButton Add an item
+
+    // The firdge list
     #fridge
+
+    // The add item dialog
     #addDialog.hidden
       p You can add a new item.
       form#addForm(action='/add', enctype='multipart/form-data', method='POST')
-        .caption Nome
+        .caption Name
         input#inputName(type='text', name='name')
-        .caption Data di scadenza
+        .caption Best before
         input#inputExpires(type='text', name='expires')
+        .caption Image
+        input#inputImage(type='file', name='image')
         input(type='submit', value='Aggiungi')                

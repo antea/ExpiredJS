@@ -4,11 +4,10 @@ var path = require("path");
 var http = require("http");
 var data = require("./data");
 var dateFormat = require("dateformat");
-var url = require("url");
-var querystring = require("querystring");
 var utils = require("./utils");
 
 function add(request, response) {
+        console.log(request.files);
         data.add(request.body.name, request.body.expires, function() {
                 response.end();
         });
@@ -39,16 +38,21 @@ app.configure(function() {
         app.set('port', process.env.PORT || 8888);
         app.set('views', __dirname + '/views');
         app.set('view engine', 'jade');
-        app.use(express.favicon(path.join(__dirname, '/public/images/favicon.ico')));
+        app.use(express.bodyParser());
         app.use(express.cookieParser('segretissimo'));
         app.use(express.session());
-        app.use(express.bodyParser());
         app.use(express.errorHandler());
         //        app.use(express.methodOverride());
         //        app.use(app.router);
+        app.use(express.favicon(path.join(__dirname, '/public/images/favicon.ico')));
         app.use(express.static(path.join(__dirname, 'public')));
-});
 
+        app.get('/', list);
+        app.get('/list', list);
+        app.get('/fridge', fridge);
+        app.post('/add', add);
+        app.get('/del/:name', del);
+});
 
 app.configure('development', function() {
         app.use(express.logger('dev'));
@@ -58,12 +62,6 @@ app.configure('development', function() {
 data.init(app.get('db_url'), function() {
         data.populate();
 });
-
-app.get('/', list);
-app.get('/list', list);
-app.get('/fridge', fridge);
-app.post('/add', add);
-app.get('/del/:name', del);
 
 http.createServer(app).listen(app.get('port'), function() {
         console.log("ExpiredJS is listening on port " + app.get('port') + " (with express).")
