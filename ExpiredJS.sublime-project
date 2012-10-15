@@ -1,0 +1,11 @@
+{
+	"folders":
+	[
+		{
+			"name": "ExpiredJS",
+			"path": "/Users/chicco/Progetti/ExpiredJS",
+			"file_exclude_patterns": [".gitignore", "*.sublime-*"],
+			"folder_exclude_patterns": ["node_modules"]
+		}
+	]
+}

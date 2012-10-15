@@ -8,12 +8,12 @@ html
     link(rel='stylesheet', href='/stylesheets/jquery-ui-1.9.0.custom.css')
     link(rel='stylesheet', href='/stylesheets/expiredjs.css')
   body
-    h1 Benvenuto in ExpiredJS
-    p Questa è la lista con il contenuto del tuo frigorifero.
-    button#addButton Aggiungi un item
+    h1 Welcome in ExpiredJS
+    p This is the content of your fridge.
+    button#addButton Add an item
     #fridge
     #addDialog.hidden
-      p Puoi aggiungere un nuovo oggetto.
+      p You can add a new item.
       form#addForm(action='/add', enctype='multipart/form-data', method='POST')
         .caption Nome
         input#inputName(type='text', name='name')
