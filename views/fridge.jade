@@ -8,4 +8,4 @@ table.fridge
       td
         a.deleteButton(href='/del/#{row.name}', title="Cancella #{row.name}") x
       td= row.name
-      td= dateFormat(new Date(row.expires), "mmmm dS yyyy")
+      td= reparse(row.expires)

@@ -6,6 +6,7 @@ var data = require("./data");
 var dateFormat = require("dateformat");
 var url = require("url");
 var querystring = require("querystring");
+var utils = require("./utils");
 
 function add(request, response) {
         data.add(request.body.name, request.body.expires, function() {
@@ -21,7 +22,7 @@ function fridge(request, response) {
         data.all(function(err, rows) {
                 response.render('fridge.jade', {
                         rows: rows,
-                        dateFormat: dateFormat
+                        reparse: utils.reparse
                 });
         });
 }
