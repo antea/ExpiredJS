@@ -9,6 +9,7 @@ var utils = require("./utils");
 function add(request, response) {
         console.log(request.files);
         data.add(request.body.name, request.body.expires, function() {
+                response.redirect('back');
                 response.end();
         });
 }
@@ -41,11 +42,11 @@ app.configure(function() {
         app.use(express.bodyParser());
         app.use(express.cookieParser('segretissimo'));
         app.use(express.session());
-        app.use(express.errorHandler());
         //        app.use(express.methodOverride());
         //        app.use(app.router);
         app.use(express.favicon(path.join(__dirname, '/public/images/favicon.ico')));
         app.use(express.static(path.join(__dirname, 'public')));
+        app.use(express.errorHandler());
 
         app.get('/', list);
         app.get('/list', list);

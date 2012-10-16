@@ -7,41 +7,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "test/data.js",
-			"settings":
-			{
-				"buffer_size": 780,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "data.js",
-			"settings":
-			{
-				"buffer_size": 1363,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "var express = require(\"express\");\nvar jade = require(\"jade\");\nvar path = require(\"path\");\nvar http = require(\"http\");\nvar data = require(\"./data\");\nvar dateFormat = require(\"dateformat\");\nvar url = require(\"url\");\nvar querystring = require(\"querystring\");\nvar utils = require(\"./utils\");\n\nfunction add(request, response) {\n        data.add(request.body.name, request.body.expires, function() {\n                response.end();\n        });\n}\n\nfunction list(request, response) {\n        response.render('list.jade');\n}\n\nfunction fridge(request, response) {\n        data.all(function(err, rows) {\n                response.render('fridge.jade', {\n                        rows: rows,\n                        reparse: utils.reparse\n                });\n        });\n}\n\nfunction del(request, response) {\n        data.del(request.params.name, function() {\n                response.end();\n        });\n}\n\nvar app = express();\n\napp.configure(function() {\n        app.set('port', process.env.PORT || 8888);\n        app.set('views', __dirname + '/views');\n        app.set('view engine', 'jade');\n        app.use(express.favicon(path.join(__dirname, '/public/images/favicon.ico')));\n        app.use(express.cookieParser('segretissimo'));\n        app.use(express.session());\n        app.use(express.bodyParser());\n        app.use(express.errorHandler());\n        //        app.use(express.methodOverride());\n        //        app.use(app.router);\n        app.use(express.static(path.join(__dirname, 'public')));\n});\n\n\napp.configure('development', function() {\n        app.use(express.logger('dev'));\n        app.set('db_url', ':memory:');\n});\n\ndata.init(app.get('db_url'), function(){data.populate();});\n\napp.get('/', list);\napp.get('/list', list);\napp.get('/fridge', fridge);\napp.post('/add', add);\napp.get('/del/:name', del);\n\nhttp.createServer(app).listen(app.get('port'), function() {\n        console.log(\"ExpiredJS is listening on port \" + app.get('port') + \" (with express).\")\n});\n",
-			"file": "app.js",
-			"file_size": 1969,
-			"file_write_time": 1350307559000000,
-			"settings":
-			{
-				"buffer_size": 1969,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "package.json",
-			"settings":
-			{
-				"buffer_size": 429,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -67,6 +32,10 @@
 	},
 	"file_history":
 	[
+		"/home/chicco/Progetti/expiredjs/package.json",
+		"/home/chicco/Progetti/expiredjs/app.js",
+		"/home/chicco/Progetti/expiredjs/data.js",
+		"/home/chicco/Progetti/expiredjs/test/data.js",
 		"/Users/chicco/Progetti/ExpiredJS/public/javascript/list.js",
 		"/Users/chicco/Progetti/ExpiredJS/views/list.jade",
 		"/Users/chicco/Progetti/ExpiredJS/views/fridge.jade",
@@ -79,7 +48,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 93.0,
+		"height": 0.0,
 		"where_history":
 		[
 		]
@@ -107,121 +76,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "test/data.js",
-					"settings":
-					{
-						"buffer_size": 780,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								619,
-								619
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 8,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "data.js",
-					"settings":
-					{
-						"buffer_size": 1363,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1363,
-								1363
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 8,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "app.js",
-					"settings":
-					{
-						"buffer_size": 1969,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1686,
-								1686
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 8,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "package.json",
-					"settings":
-					{
-						"buffer_size": 429,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								353,
-								353
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"tab_size": 8,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],
