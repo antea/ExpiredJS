@@ -33,6 +33,16 @@ function del(request, response) {
         });
 }
 
+function img(request, response) {
+        // data.img(request.params.name, function(err, rows) {
+        //         response.writeHead(200, {
+        //                 'Content-Type': 'image/png'
+        //         });
+        //         response.send(rows.image);
+        //         response.end();
+        // });
+}
+
 var app = express();
 
 app.configure(function() {
@@ -53,6 +63,7 @@ app.configure(function() {
         app.get('/fridge', fridge);
         app.post('/add', add);
         app.get('/del/:name', del);
+        app.get('/img/:name', img);
 });
 
 app.configure('development', function() {

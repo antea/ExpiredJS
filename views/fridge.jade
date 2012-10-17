@@ -3,9 +3,12 @@ table.fridge
     td
     td Name
     td Best before
+    td Image
   each row in rows  
     tr
       td
         a.deleteButton(href='/del/#{row.name}', title="Cancella #{row.name}") x
       td= row.name
       td= reparse(row.expires)
+      td
+        img(src='/img/#{row.name}')
