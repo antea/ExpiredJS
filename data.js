@@ -44,11 +44,11 @@ function img(name, callback) {
 // name: string, name of the thing
 // expires: Date, expiry date of the object
 
-function add(name, expires, callback) {
+function add(name, expires, image, callback) {
         countByName(name, function(err, rows) {
                 if(0 == rows.c) {
                         db.prepare('insert into items values(?, ?, ?)').
-                        run(name, dateFormat(expires, 'yyyymmdd'), null, callback);
+                        run(name, dateFormat(expires, 'yyyymmdd'), image, callback);
                 };
         });
 }

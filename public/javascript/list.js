@@ -53,9 +53,10 @@ $(document).ready(function() {
   $("#addForm").ajaxForm(options);
 
   $("#addForm").submit(function(ev) {
-    event.preventDefault();
+//    ev.preventDefault();
     $("#addDialog").dialog("close");
-    $(this).ajaxSubmit(options);
+//    $(this).ajaxSubmit(options);
+    return false;
   });
 
   updateFridge();

@@ -5,11 +5,14 @@ var http = require("http");
 var data = require("./data");
 var dateFormat = require("dateformat");
 var utils = require("./utils");
+var fs = require("fs");
 
 function add(request, response) {
-        console.log(request.files);
-        data.add(request.body.name, request.body.expires, function() {
-                fridge(request, response);
+        fs.readFile(request.files.image.path, function(err, image) {
+                data.add(request.body.name, request.body.expires, image, function() {
+                        // console.log(image);
+                        fridge(request, response);
+                });
         });
 }
 
@@ -33,14 +36,17 @@ function del(request, response) {
 }
 
 function img(request, response) {
-        // data.img(request.params.name, function(err, rows) {
-        //         response.writeHead(200, {
-        //                 'Content-Type': 'image/png'
-        //         });
-        //         response.send(rows.image);
-        //         response.end();
-        // });
-        response.end();
+        data.img(request.params.name, function(err, rows) {
+                // response.writeHead(200, {
+                //         'Content-Type': 'image/png'
+                // });
+                // err && console.log(err);
+                err || console.log(rows);
+                rows && response.set('Content-Type', 'image/jpeg');
+                rows && response.send(rows.image);
+                response.end();
+        });
+        // response.end();
 }
 
 var app = express();
