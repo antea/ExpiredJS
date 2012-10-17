@@ -2,6 +2,23 @@
  * We update the fridge table.
  */
 
+function rebindFridge() {
+  // The delete buttons are redrawn and rebound
+  $(".deleteButton").button({
+    icons: {
+      primary: "ui-icon-trash"
+    },
+    text: false
+  });
+  $(".deleteButton").click(function(ev) {
+    ev.preventDefault();
+    $.ajax({
+      url: $(this).attr('href')
+    });
+    updateFridge();
+  });
+}
+
 function updateFridge() {
   // An ajax call loads the fridge HTML fragment.
   $.ajax({
@@ -10,20 +27,7 @@ function updateFridge() {
     success: function(text) {
       // The fridge table il updated.
       $('#fridge').html(text);
-      // The delete buttons are redrawn and rebound
-      $(".deleteButton").button({
-        icons: {
-          primary: "ui-icon-trash"
-        },
-        text: false
-      });
-      $(".deleteButton").click(function(ev) {
-        ev.preventDefault();
-        $.ajax({
-          url: $(this).attr('href')
-        });
-        updateFridge();
-      });
+      rebindFridge();
     }
   });
 }
@@ -41,8 +45,17 @@ $(document).ready(function() {
     $("#addDialog").dialog("open");
   });
 
+  var options = {
+    target: '#fridge',
+    beforeSubmit: function() {},
+    success: rebindFridge
+  };
+  $("#addForm").ajaxForm(options);
+
   $("#addForm").submit(function(ev) {
-    updateFridge();
+    event.preventDefault();
+    $("#addDialog").dialog("close");
+    $(this).ajaxSubmit(options);
   });
 
   updateFridge();

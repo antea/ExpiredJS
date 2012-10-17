@@ -9,8 +9,7 @@ var utils = require("./utils");
 function add(request, response) {
         console.log(request.files);
         data.add(request.body.name, request.body.expires, function() {
-                response.redirect('back');
-                response.end();
+                fridge(request, response);
         });
 }
 
@@ -41,6 +40,7 @@ function img(request, response) {
         //         response.send(rows.image);
         //         response.end();
         // });
+        response.end();
 }
 
 var app = express();
