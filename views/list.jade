@@ -1,32 +1,34 @@
 !!! 5
 html
   head
-    meta(http-equiv='Content-Type', content='text/html;charset=UTF-8')
+    meta(http-equiv='Content-Type', content='text/html;charset=UTF-8', name='viewport', content='width=device-width, initial-scale=1.0')
     script(type='text/javascript', src='/javascript/jquery-1.8.2.js')
     script(type='text/javascript', src='/javascript/jquery-ui-1.9.0.min.js')
     script(type="text/javascript", src='/javascript/jquery.form.js')
     script(type="text/javascript", src='/javascript/list.js')
+    link(rel='stylesheet', href='/stylesheets/kube101/kube.css')
     link(rel='stylesheet', href='/stylesheets/jquery-ui-1.9.0.custom.css')
     link(rel='stylesheet', href='/stylesheets/expiredjs.css')
   body
-    h1 Welcome in ExpiredJS
-    p This is the content of your fridge.
-    button#addButton Add an item
+    #page
+        h1 Welcome in ExpiredJS
+        p This is the content of your fridge.
+        button#addButton Add an item
 
-    // The firdge list
-    #fridge
+        // The firdge list
+        #fridge
 
-    // The add item dialog
-    #addDialog.hidden
-      p You can add a new item.
-      form#addForm(action='/add', enctype='multipart/form-data', method='POST')
-        .caption Name
-        input#inputName(type='text', name='name')
-        .caption Best before
-        input#inputExpires(type='text', name='expires')
-        .caption Image
-        input#inputImage(type='file', name='image')
-        input(type='submit', value='Add')
+        // The add item dialog
+        #addDialog.hidden
+          p You can add a new item.
+          form#addForm(action='/add', enctype='multipart/form-data', method='POST')
+            .caption Name
+            input#inputName(type='text', name='name')
+            .caption Best before
+            input#inputExpires(type='text', name='expires')
+            .caption Image
+            input#inputImage(type='file', name='image')
+            input(type='submit', value='Add')
 
-    #imageDialog.hidden
-        img#fullimage(width='300px', height='auto')
+        #imageDialog.hidden
+            img#fullimage(width='300px', height='auto')

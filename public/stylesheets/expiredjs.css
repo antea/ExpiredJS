@@ -1,8 +1,16 @@
 body {
+        background-image: url("/images/low_contrast_linen.png") ;
         font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif; 
         font-size: 0.8em;
 }​
 
 .hidden {
         display: none;        
+}
+
+#page {
+        width: 600px;
+        padding: 0 40px;
+        margin: 40px auto;
+        background-color: #ffffff;
 }
