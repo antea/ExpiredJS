@@ -11,4 +11,5 @@ table.fridge
       td= row.name
       td= reparse(row.expires)
       td
-        img(src='/img/#{row.name}')
+        a.imageButton(href='/img/#{row.name}', name="#{row.name}")
+          img(src='/thumb/#{row.name}')

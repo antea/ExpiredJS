@@ -1,5 +1,6 @@
 // Substitutes the current #fridge div with the new text and 
 // rebinds the delete buttons.
+
 function rewriteFridge(text) {
   // The fridge table is updated.
   $('#fridge').html(text);
@@ -21,6 +22,11 @@ function rebindFridge() {
       success: rewriteFridge
     });
   });
+  $(".imageButton").click(function(ev) {
+    ev.preventDefault();
+    $("#imageDialog").dialog("open");
+    $("#fullimage").attr("src", "/img/" + $(this).attr('name'));
+  });
 }
 
 $(document).ready(function() {
@@ -29,6 +35,14 @@ $(document).ready(function() {
     autoOpen: false
   });
 
+  $("#imageDialog").dialog({
+    title: 'Full image',
+    autoOpen: false,
+    resizable: false,
+    width: 400,
+    height: 300
+  })
+
   $("#inputExpires").datepicker();
 
   $("#addButton").button();
@@ -36,17 +50,13 @@ $(document).ready(function() {
     $("#addDialog").dialog("open");
   });
 
-  var options = {
+  $("#addForm").ajaxForm({
     target: '#fridge',
-    beforeSubmit: function() {},
     success: rebindFridge
-  };
-  $("#addForm").ajaxForm(options);
+  });
 
   $("#addForm").submit(function(ev) {
-    //    ev.preventDefault();
     $("#addDialog").dialog("close");
-    //    $(this).ajaxSubmit(options);
     return false;
   });
 

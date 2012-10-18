@@ -19,7 +19,7 @@ exports['data'] = nodeunit.testCase({
                 Step(
 
                 function() {
-                        data.add('Item1', new Date(), null, this);
+                        data.add('Item1', new Date(), null, null, this);
                 }, function() {
                         data.count(function(err, rows) {
                                 rows.c.should.be.eql(1);
@@ -31,9 +31,9 @@ exports['data'] = nodeunit.testCase({
                 Step(
 
                 function() {
-                        data.add('Item1', new Date(), null, this);
+                        data.add('Item1', new Date(), null, null, this);
                 }, function() {
-                        data.add('Item2', new Date(), null, this);
+                        data.add('Item2', new Date(), null, null, this);
                 }, function() {
                         data.count(function(err, rows) {
                                 rows.c.should.be.eql(2);
@@ -45,18 +45,18 @@ exports['data'] = nodeunit.testCase({
                 Step(
 
                 function() {
-                        data.add('Item1', new Date(), null, this);
+                        data.add('Item1', new Date(), null, null, this);
                 }, function() {
-                        data.add('Item1', new Date(), null, this);
+                        data.add('Item1', new Date(), null, null, this);
                 });
                 test.done();
         },
         'add an item with a picture': function(test) {
                 fs.readFile('test/walle.jpg', function(err, image) {
-                        data.add('Item Walle', new Date(), image, function() {
+                        data.add('Item Walle', new Date(), image, null, function() {
                                 // console.log('1: ' + image);
                                 data.img('Item Walle', function(err, retreived) {
-                                        console.log('2: ' + retreived);
+                                        // console.log('2: ' + retreived);
                                         assert.ok(retreived, 'Spiegami retreived...');
                                         test.done();
                                 });

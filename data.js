@@ -8,18 +8,20 @@ var db;
 
 function init(url, callback) {
         db = new sqlite3.Database(url);
-        db.run('create table items (name text primary key, expires char(8), image blob)', callback);
+        db.run('create table items (name text primary key, expires char(8), image blob, thumbnail blob)', callback);
 }
 
 function populate(callback) {
-        var st = db.prepare("insert into items values(?,?,?)", function() {
+        var st = db.prepare("insert into items values(?,?,?,?)", function() {
                 fs.readFile("test/walle.jpg", function(err, image) {
-                        for(var i = 0; i < 12; i++) {
-                                var date = new Date();
-                                date.setMonth(i);
-                                st.run("i" + i, dateFormat(date, 'yyyymmdd'), image);
-                        };
-                        callback && callback();
+                        fs.readFile("test/walles.jpg", function(err2, thumbnail) {
+                                for(var i = 0; i < 12; i++) {
+                                        var date = new Date();
+                                        date.setMonth(i);
+                                        st.run("i" + i, dateFormat(date, 'yyyymmdd'), image, thumbnail);
+                                };
+                                callback && callback();
+                        });
                 });
         });
 }
@@ -44,14 +46,18 @@ function img(name, callback) {
         db.get('select image from items where name = ?', name, callback);
 }
 
+function thumbnail(name, callback) {
+        db.get('select thumbnail from items where name = ?', name, callback);
+}
+
 // name: string, name of the thing
 // expires: Date, expiry date of the object
 
-function add(name, expires, image, callback) {
+function add(name, expires, image, thumbnail, callback) {
         countByName(name, function(err, rows) {
                 if(0 == rows.c) {
-                        db.prepare('insert into items values(?, ?, ?)').
-                        run(name, dateFormat(expires, 'yyyymmdd'), image, callback);
+                        db.prepare('insert into items values(?,?,?,?)').
+                        run(name, dateFormat(expires, 'yyyymmdd'), image, thumbnail, callback);
                 };
         });
 }
@@ -63,3 +69,4 @@ exports.add = add;
 exports.count = count;
 exports.populate = populate;
 exports.img = img;
+exports.thumbnail = thumbnail;

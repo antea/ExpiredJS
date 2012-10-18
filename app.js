@@ -6,12 +6,19 @@ var data = require("./data");
 var dateFormat = require("dateformat");
 var utils = require("./utils");
 var fs = require("fs");
+var im = require("imagemagick");
 
 function add(request, response) {
-        fs.readFile(request.files.image.path, function(err, image) {
-                data.add(request.body.name, request.body.expires, image, function() {
-                        // console.log(image);
-                        fridge(request, response);
+        var imagepath = request.files.image.path;
+        var imagename = request.body.name;
+        var expires = request.body.expires;
+        im.convert([imagepath, '-resize', '40x40', imagepath + 's'], function(err, stdout) {
+                fs.readFile(imagepath, function(err, image) {
+                        fs.readFile(imagepath + 's', function(err2, thumbnail) {
+                                data.add(imagename, expires, image, thumbnail, function() {
+                                        fridge(request, response);
+                                });
+                        });
                 });
         });
 }
@@ -37,10 +44,15 @@ function del(request, response) {
 
 function img(request, response) {
         data.img(request.params.name, function(err, rows) {
-                rows && console.log(rows);
-                rows && response.set('Content-Type', 'image/jpeg');
                 rows && response.send(rows.image);
-                // NO response.end() here!!
+                rows || response.end();
+        });
+}
+
+function thumb(request, response) {
+        data.thumbnail(request.params.name, function(err, rows) {
+                rows && response.send(rows.thumbnail);
+                rows || response.end();
         });
 }
 
@@ -65,6 +77,7 @@ app.configure(function() {
         app.post('/add', add);
         app.get('/del/:name', del);
         app.get('/img/:name', img);
+        app.get('/thumb/:name', thumb);
 });
 
 app.configure('development', function() {

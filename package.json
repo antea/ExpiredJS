@@ -9,6 +9,7 @@
                 "sqlite3": "*",
                 "dateformat": "*",
                 "step": "*",
+                "imagemagick": "*",
                 "nodeunit": "*",
                 "should": "*"
         }
