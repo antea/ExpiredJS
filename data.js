@@ -1,6 +1,7 @@
 // This file contains data access logic.
 var dateFormat = require("dateformat");
 var sqlite3 = require("sqlite3").verbose();
+var fs = require("fs");
 
 // Database initialization
 var db;
@@ -12,12 +13,14 @@ function init(url, callback) {
 
 function populate(callback) {
         var st = db.prepare("insert into items values(?,?,?)", function() {
-                for(var i = 0; i < 12; i++) {
-                        var date = new Date();
-                        date.setMonth(i);
-                        st.run("Item " + i, dateFormat(date, 'yyyymmdd'), null);
-                };
-                callback && callback();
+                fs.readFile("test/walle.jpg", function(err, image) {
+                        for(var i = 0; i < 12; i++) {
+                                var date = new Date();
+                                date.setMonth(i);
+                                st.run("i" + i, dateFormat(date, 'yyyymmdd'), image);
+                        };
+                        callback && callback();
+                });
         });
 }
 

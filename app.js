@@ -37,16 +37,11 @@ function del(request, response) {
 
 function img(request, response) {
         data.img(request.params.name, function(err, rows) {
-                // response.writeHead(200, {
-                //         'Content-Type': 'image/png'
-                // });
-                // err && console.log(err);
-                err || console.log(rows);
+                rows && console.log(rows);
                 rows && response.set('Content-Type', 'image/jpeg');
                 rows && response.send(rows.image);
-                response.end();
+                // NO response.end() here!!
         });
-        // response.end();
 }
 
 var app = express();
