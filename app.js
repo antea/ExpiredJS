@@ -31,7 +31,7 @@ function fridge(request, response) {
 
 function del(request, response) {
         data.del(request.params.name, function() {
-                response.end();
+                fridge(request, response);
         });
 }
 
