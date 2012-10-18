@@ -11,9 +11,6 @@ function parseYYYYMMDD(str) {
 }
 
 // Converts a yyyymmdd date to mmmm dS yyyy
-
-function reparse(str) {
+exports.reparse = function(str) {
         return dateFormat(parseYYYYMMDD(str), "mmmm dS yyyy")
 }
-
-exports.reparse = reparse;
