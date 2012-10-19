@@ -7,6 +7,8 @@ var dateFormat = require("dateformat");
 var utils = require("./utils");
 var fs = require("fs");
 var im = require("imagemagick");
+var cron = require('cron').CronJob;
+var nodemailer = require("nodemailer");
 
 function add(request, response) {
         var imagename = request.body.name;
@@ -71,38 +73,77 @@ function thumb(request, response) {
 }
 
 var app = express();
+var conf;
+var smtp;
 
-app.configure(function() {
-        app.set('port', process.env.PORT || 8888);
-        app.set('views', __dirname + '/views');
-        app.set('view engine', 'jade');
-        app.use(express.bodyParser());
-        app.use(express.cookieParser('segretissimo'));
-        app.use(express.session());
-        //        app.use(express.methodOverride());
-        //        app.use(app.router);
-        app.use(express.favicon(path.join(__dirname, '/public/images/favicon.ico')));
-        app.use(express.static(path.join(__dirname, 'public')));
-        app.use(express.errorHandler());
+fs.readFile('expiredjs.conf', 'utf8', function(err, confdata) {
+        conf = JSON.parse(confdata);
+        smtp = nodemailer.createTransport("SMTP", {
+                service: "Gmail",
+                auth: {
+                        user: conf.mailsender,
+                        pass: conf.mailpassword
+                }
+        });
 
-        app.get('/', list);
-        app.get('/list', list);
-        app.get('/fridge', fridge);
-        app.post('/add', add);
-        app.get('/del/:name', del);
-        app.get('/img/:name', img);
-        app.get('/thumb/:name', thumb);
-});
+        app.configure(function() {
+                app.set('port', process.env.PORT || 8888);
+                app.set('views', __dirname + '/views');
+                app.set('view engine', 'jade');
+                app.use(express.bodyParser());
+                app.use(express.cookieParser('segretissimo'));
+                app.use(express.session());
+                //        app.use(express.methodOverride());
+                //        app.use(app.router);
+                app.use(express.favicon(path.join(__dirname, '/public/images/favicon.ico')));
+                app.use(express.static(path.join(__dirname, 'public')));
+                app.use(express.errorHandler());
 
-app.configure('development', function() {
-        app.use(express.logger('dev'));
-        app.set('db_url', ':memory:');
-});
+                app.get('/', list);
+                app.get('/list', list);
+                app.get('/fridge', fridge);
+                app.post('/add', add);
+                app.get('/del/:name', del);
+                app.get('/img/:name', img);
+                app.get('/thumb/:name', thumb);
+        });
 
-data.init(app.get('db_url'), function() {
-        data.populate();
-});
+        app.configure('development', function() {
+                app.use(express.logger('dev'));
+                app.set('db_url', ':memory:');
+        });
 
-http.createServer(app).listen(app.get('port'), function() {
-        console.log("ExpiredJS is listening on port " + app.get('port') + " (with express).")
+        data.init(app.get('db_url'), function() {
+                data.populate();
+        });
+
+        http.createServer(app).listen(app.get('port'), function() {
+                console.log("ExpiredJS is listening on port " + app.get('port') + " (with express).");
+        });
+
+        new cron(conf.cron, function() {
+                data.nextdays(conf.notice, function(err, rows) {
+                        if(rows) {
+                                var message = 'The following things are expiring in the next ' + conf.notice + ' days:\n';
+                                rows.forEach(function(row) {
+                                        message += row.name + ": " + utils.reparse(row.expires) + '\n';
+                                });
+                                console.log(message);
+                                var mailOptions = {
+                                        from: conf.mailsender,
+                                        to: conf.mailrecipient,
+                                        subject: "ExpiredJS has something for you",
+                                        text: message
+                                }
+                                smtp.sendMail(mailOptions, function(error, response) {
+                                        if(error) {
+                                                console.log(error);
+                                        } else {
+                                                console.log("Message sent: " + response.message);
+                                        }
+                                        smtp.close(); // shut down the connection pool, no more messages
+                                });
+                        }
+                });
+        }, null, true);
 });

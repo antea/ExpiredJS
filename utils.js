@@ -14,3 +14,7 @@ function parseYYYYMMDD(str) {
 exports.reparse = function(str) {
         return dateFormat(parseYYYYMMDD(str), "mmmm dS yyyy")
 }
+
+exports.formatYYYYMMDD = function(date) {
+        return dateFormat(date, 'yyyymmdd');
+}

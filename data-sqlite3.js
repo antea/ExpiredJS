@@ -2,6 +2,7 @@
 var dateFormat = require("dateformat");
 var sqlite3 = require("sqlite3").verbose();
 var fs = require("fs");
+var utils = require("./utils");
 
 // Database initialization
 var db;
@@ -18,7 +19,7 @@ exports.populate = function(callback) {
                                 for(var i = 0; i < 12; i++) {
                                         var date = new Date();
                                         date.setMonth(i);
-                                        st.run("i" + i, dateFormat(date, 'yyyymmdd'), image, thumbnail);
+                                        st.run("i" + i, utils.formatYYYYMMDD(date), image, thumbnail);
                                 };
                                 callback && callback();
                         });
@@ -28,6 +29,13 @@ exports.populate = function(callback) {
 
 exports.all = function(callback) {
         db.all('select * from items order by expires', callback);
+}
+
+exports.nextdays = function(days, callback) {
+        var today = new Date();
+        var future = new Date();
+        future.setDate(today.getDate() + days);
+        db.all('select * from items where expires > ? and expires < ? order by expires', utils.formatYYYYMMDD(today), utils.formatYYYYMMDD(future), callback);
 }
 
 exports.del = function(name, callback) {
