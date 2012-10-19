@@ -9,18 +9,24 @@ var fs = require("fs");
 var im = require("imagemagick");
 
 function add(request, response) {
-        var imagepath = request.files.image.path;
         var imagename = request.body.name;
         var expires = request.body.expires;
-        im.convert([imagepath, '-resize', '40x40', imagepath + 's'], function(err, stdout) {
-                fs.readFile(imagepath, function(err, image) {
-                        fs.readFile(imagepath + 's', function(err2, thumbnail) {
-                                data.add(imagename, expires, image, thumbnail, function() {
-                                        fridge(request, response);
+        if(request.files.image) {
+                var imagepath = request.files.image.path;
+                im.convert([imagepath, '-resize', '40x40', imagepath + 's'], function(err, stdout) {
+                        fs.readFile(imagepath, function(err, image) {
+                                fs.readFile(imagepath + 's', function(err2, thumbnail) {
+                                        data.add(imagename, expires, image, thumbnail, function() {
+                                                fridge(request, response);
+                                        });
                                 });
                         });
                 });
-        });
+        } else {
+                data.add(imagename, expires, null, null, function() {
+                        fridge(request, response);
+                });
+        }
 }
 
 function list(request, response) {
