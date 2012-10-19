@@ -1,4 +1,4 @@
-var data = require("../data");
+var data = require("../data-sqlite3");
 var nodeunit = require("nodeunit");
 require("should");
 var Step = require("step");
@@ -13,6 +13,18 @@ exports['data'] = nodeunit.testCase({
                 data.count(function(err, rows) {
                         rows.c.should.be.eql(0);
                         test.done();
+                });
+        },
+        'add an item with a picture': function(test) {
+                fs.readFile('test/walle.jpg', function(err, image) {
+                        data.add('Item Walle', new Date(), image, null, function() {
+                                // console.log('1: ' + image);
+                                data.img('Item Walle', function(err, retreived) {
+                                        // console.log('2: ' + retreived);
+                                        assert.ok(retreived, 'Spiegami retreived...');
+                                        test.done();
+                                });
+                        });
                 });
         },
         'count 1 item in the fridge': function(test) {
@@ -50,17 +62,5 @@ exports['data'] = nodeunit.testCase({
                         data.add('Item1', new Date(), null, null, this);
                 });
                 test.done();
-        },
-        'add an item with a picture': function(test) {
-                fs.readFile('test/walle.jpg', function(err, image) {
-                        data.add('Item Walle', new Date(), image, null, function() {
-                                // console.log('1: ' + image);
-                                data.img('Item Walle', function(err, retreived) {
-                                        // console.log('2: ' + retreived);
-                                        assert.ok(retreived, 'Spiegami retreived...');
-                                        test.done();
-                                });
-                        });
-                });
         }
 })
