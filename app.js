@@ -48,17 +48,25 @@ function del(request, response) {
         });
 }
 
+function sendImageOrBlank(image, response) {
+        if(image) {
+                response.send(image);
+        } else {
+                fs.readFile('public/images/empty.png', function(err, image) {
+                        response.send(image);
+                });
+        }
+}
+
 function img(request, response) {
         data.img(request.params.name, function(err, rows) {
-                rows && response.send(rows.image);
-                rows || response.end();
+                sendImageOrBlank(rows.image, response);
         });
 }
 
 function thumb(request, response) {
         data.thumbnail(request.params.name, function(err, rows) {
-                rows && response.send(rows.thumbnail);
-                rows || response.end();
+                sendImageOrBlank(rows.thumbnail, response);
         });
 }
 
