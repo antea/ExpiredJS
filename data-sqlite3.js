@@ -6,12 +6,12 @@ var fs = require("fs");
 // Database initialization
 var db;
 
-function init(url, callback) {
+exports.init = function(url, callback) {
         db = new sqlite3.Database(url);
         db.run('create table items (name text primary key, expires char(8), image blob, thumbnail blob)', callback);
 }
 
-function populate(callback) {
+exports.populate = function(callback) {
         var st = db.prepare("insert into items values(?,?,?,?)", function() {
                 fs.readFile("test/walle.jpg", function(err, image) {
                         fs.readFile("test/walles.jpg", function(err2, thumbnail) {
@@ -26,15 +26,15 @@ function populate(callback) {
         });
 }
 
-function all(callback) {
+exports.all = function(callback) {
         db.all('select * from items order by expires', callback);
 }
 
-function del(name, callback) {
+exports.del = function(name, callback) {
         db.prepare('delete from items where name=?').run(name, callback);
 }
 
-function count(callback) {
+exports.count = function(callback) {
         db.get('select count(*) as c from items', callback);
 }
 
@@ -42,18 +42,17 @@ function countByName(name, callback) {
         db.prepare('select count(*) as c from items where name = ?').get(name, callback);
 }
 
-function img(name, callback) {
+exports.img = function(name, callback) {
         db.get('select image from items where name = ?', name, callback);
 }
 
-function thumbnail(name, callback) {
+exports.thumbnail = function(name, callback) {
         db.get('select thumbnail from items where name = ?', name, callback);
 }
 
 // name: string, name of the thing
 // expires: Date, expiry date of the object
-
-function add(name, expires, image, thumbnail, callback) {
+exports.add = function(name, expires, image, thumbnail, callback) {
         countByName(name, function(err, rows) {
                 if(0 == rows.c) {
                         db.prepare('insert into items values(?,?,?,?)').
@@ -62,11 +61,4 @@ function add(name, expires, image, thumbnail, callback) {
         });
 }
 
-exports.init = init;
-exports.all = all;
-exports.del = del;
-exports.add = add;
-exports.count = count;
-exports.populate = populate;
-exports.img = img;
-exports.thumbnail = thumbnail;
+exports.countByName = countByName;
