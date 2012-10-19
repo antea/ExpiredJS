@@ -21,6 +21,7 @@ function rebindFridge() {
       url: $(this).attr('href'),
       success: rewriteFridge
     });
+    $(".ui-tooltip").fadeOut();
   });
   $(".imageButton").click(function(ev) {
     ev.preventDefault();
