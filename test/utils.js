@@ -1,4 +1,4 @@
-var utils = require("../utils.js");
+var utils = require("../lib/utils.js");
 var nodeunit = require("nodeunit");
 require("should");
 

@@ -1,4 +1,4 @@
-var data = require("../data-sqlite3");
+var data = require("../lib/data-sqlite3");
 var nodeunit = require("nodeunit");
 require("should");
 var Step = require("step");

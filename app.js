@@ -1,76 +1,12 @@
+var fs = require("fs");
+var path = require("path");
 var express = require("express");
 var jade = require("jade");
-var path = require("path");
 var http = require("http");
-var data = require("./data-sqlite3");
-var dateFormat = require("dateformat");
-var utils = require("./utils");
-var fs = require("fs");
-var im = require("imagemagick");
+var data = require("./lib/data-sqlite3");
 var cron = require('cron').CronJob;
 var nodemailer = require("nodemailer");
-
-function add(request, response) {
-        var imagename = request.body.name;
-        var expires = request.body.expires;
-        if(request.files.image) {
-                var imagepath = request.files.image.path;
-                im.convert([imagepath, '-resize', '40x40', imagepath + 's'], function(err, stdout) {
-                        fs.readFile(imagepath, function(err, image) {
-                                fs.readFile(imagepath + 's', function(err2, thumbnail) {
-                                        data.add(imagename, expires, image, thumbnail, function() {
-                                                fridge(request, response);
-                                        });
-                                });
-                        });
-                });
-        } else {
-                data.add(imagename, expires, null, null, function() {
-                        fridge(request, response);
-                });
-        }
-}
-
-function list(request, response) {
-        response.render('list.jade');
-}
-
-function fridge(request, response) {
-        data.all(function(err, rows) {
-                response.render('fridge.jade', {
-                        rows: rows,
-                        reparse: utils.reparse
-                });
-        });
-}
-
-function del(request, response) {
-        data.del(request.params.name, function() {
-                fridge(request, response);
-        });
-}
-
-function sendImageOrBlank(image, response) {
-        if(image) {
-                response.send(image);
-        } else {
-                fs.readFile('public/images/empty.png', function(err, image) {
-                        response.send(image);
-                });
-        }
-}
-
-function img(request, response) {
-        data.img(request.params.name, function(err, rows) {
-                sendImageOrBlank(rows.image, response);
-        });
-}
-
-function thumb(request, response) {
-        data.thumbnail(request.params.name, function(err, rows) {
-                sendImageOrBlank(rows.thumbnail, response);
-        });
-}
+var routes = require("./lib/routes");
 
 var app = express();
 var conf;
@@ -99,13 +35,13 @@ fs.readFile('expiredjs.conf', 'utf8', function(err, confdata) {
                 app.use(express.static(path.join(__dirname, 'public')));
                 app.use(express.errorHandler());
 
-                app.get('/', list);
-                app.get('/list', list);
-                app.get('/fridge', fridge);
-                app.post('/add', add);
-                app.get('/del/:name', del);
-                app.get('/img/:name', img);
-                app.get('/thumb/:name', thumb);
+                app.get('/', routes.list);
+                app.get('/list', routes.list);
+                app.get('/fridge', routes.fridge);
+                app.post('/add', routes.add);
+                app.get('/del/:name', routes.del);
+                app.get('/img/:name', routes.img);
+                app.get('/thumb/:name', routes.thumb);
         });
 
         app.configure('development', function() {
