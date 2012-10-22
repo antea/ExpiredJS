@@ -1,20 +1,20 @@
-var fs = require("fs");
-var path = require("path");
-var express = require("express");
-var jade = require("jade");
-var http = require("http");
-var data = require("./lib/data-sqlite3");
-var cron = require('cron').CronJob;
-var nodemailer = require("nodemailer");
-var routes = require("./lib/routes");
+var configure = require("./lib/conf").conf;
 
-var app = express();
-var conf;
-var smtp;
+configure(function(conf) {
+        var fs = require("fs");
+        var path = require("path");
+        var express = require("express");
+        var jade = require("jade");
+        var http = require("http");
+        var data = require("./lib/data-" + conf.data);
+        data.conf = conf;
+        var cron = require('cron').CronJob;
+        var nodemailer = require("nodemailer");
+        var routes = require("./lib/routes");
+        routes.data = data;
 
-fs.readFile('expiredjs.conf', 'utf8', function(err, confdata) {
-        conf = JSON.parse(confdata);
-        smtp = nodemailer.createTransport("SMTP", {
+        var app = express();
+        var smtp = nodemailer.createTransport("SMTP", {
                 service: "Gmail",
                 auth: {
                         user: conf.mailsender,
@@ -35,6 +35,9 @@ fs.readFile('expiredjs.conf', 'utf8', function(err, confdata) {
                 app.use(express.static(path.join(__dirname, 'public')));
                 app.use(express.errorHandler());
 
+                data.init(conf, function() {
+                        data.populate();
+                });
                 app.get('/', routes.list);
                 app.get('/list', routes.list);
                 app.get('/fridge', routes.fridge);
@@ -46,12 +49,8 @@ fs.readFile('expiredjs.conf', 'utf8', function(err, confdata) {
 
         app.configure('development', function() {
                 app.use(express.logger('dev'));
-                app.set('db_url', ':memory:');
         });
 
-        data.init(app.get('db_url'), function() {
-                data.populate();
-        });
 
         http.createServer(app).listen(app.get('port'), function() {
                 console.log("ExpiredJS is listening on port " + app.get('port') + " (with express).");
