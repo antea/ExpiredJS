@@ -11,6 +11,8 @@
                 "step": "*",
                 "imagemagick": "*",
                 "cron": "*",
+                "redis": "*",
+                "hiredis": "*",
                 "nodemailer": "*",
                 "nodeunit": "*",
                 "should": "*"

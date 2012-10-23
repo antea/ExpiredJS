@@ -1,19 +1,23 @@
-var data = require("../lib/data-sqlite3");
+var data = require("../lib/data-redis");
 var nodeunit = require("nodeunit");
 require("should");
 var Step = require("step");
 var fs = require("fs");
 var assert = require("assert");
 
-exports['data'] = nodeunit.testCase({
-        setUp: function(callback) {
-                data.init({
-                        sqlite3_url: ':memory:'
-                }, callback);
-                callback();
+exports['redis'] = nodeunit.testCase({
+        'setUp': function(callback) {
+                // console.log('setup');
+                data.init({}, function() {
+                        // console.log('setup done');
+                        data.clean();
+                        callback();
+                });
         },
         'count empty fridge': function(test) {
+                console.log('count empty fridge');
                 data.count(function(err, c) {
+                        console.log('** c=' + c);
                         c.should.be.eql(0);
                         test.done();
                 });
