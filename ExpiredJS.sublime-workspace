@@ -8,7 +8,7 @@
 	"buffers":
 	[
 	],
-	"build_system": "",
+	"build_system": "Packages/User/nodeunit.sublime-build",
 	"command_palette":
 	{
 		"height": 27.0,
@@ -32,15 +32,17 @@
 	},
 	"file_history":
 	[
-		"/home/chicco/Progetti/expiredjs/package.json",
-		"/home/chicco/Progetti/expiredjs/app.js",
-		"/home/chicco/Progetti/expiredjs/data.js",
-		"/home/chicco/Progetti/expiredjs/test/data.js",
-		"/Users/chicco/Progetti/ExpiredJS/public/javascript/list.js",
+		"/Users/chicco/Progetti/ExpiredJS/app.js",
 		"/Users/chicco/Progetti/ExpiredJS/views/list.jade",
+		"/Users/chicco/Progetti/ExpiredJS/public/javascript/list.js",
 		"/Users/chicco/Progetti/ExpiredJS/views/fridge.jade",
-		"/Users/chicco/Progetti/ExpiredJS/project.xml",
-		"/Users/chicco/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings"
+		"/Users/chicco/Progetti/ExpiredJS/test/data.js",
+		"/Users/chicco/Progetti/ExpiredJS/data.js",
+		"/Users/chicco/Progetti/ExpiredJS/package.json",
+		"/Users/chicco/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/chicco/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/chicco/Library/Application Support/Sublime Text 2/Packages/User/nodeunit.sublime-build",
+		"/Users/chicco/Progetti/ExpiredJS/project.xml"
 	],
 	"find":
 	{
@@ -58,6 +60,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"var",
 			"\n        "
 		],
 		"highlight": true,
@@ -112,9 +115,13 @@
 		]
 	},
 	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 227.0
+	},
 	"replace":
 	{
-		"height": 0.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":

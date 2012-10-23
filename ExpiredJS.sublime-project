@@ -3,7 +3,7 @@
 	[
 		{
 			"name": "ExpiredJS",
-			"path": "/home/chicco/Progetti/ExpiredJS",
+			"path": "~/Progetti/ExpiredJS",
 			"file_exclude_patterns": [".gitignore", "*.sublime-*"],
 			"folder_exclude_patterns": ["node_modules"]
 		}

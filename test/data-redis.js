@@ -10,15 +10,20 @@ exports['redis'] = nodeunit.testCase({
                 // console.log('setup');
                 data.init({}, function() {
                         // console.log('setup done');
-                        data.clean();
-                        callback();
+                        data.clean(callback);
+                        // console.log('setUp done');
+                        // callback();
                 });
         },
+        'tearDown': function(callback) {
+                data.close(callback);
+        },
         'count empty fridge': function(test) {
-                console.log('count empty fridge');
+                // console.log('count empty fridge');
                 data.count(function(err, c) {
-                        console.log('** c=' + c);
+                        // console.log('** c=' + c);
                         c.should.be.eql(0);
+                        // console.log('done');
                         test.done();
                 });
         },
@@ -29,45 +34,37 @@ exports['redis'] = nodeunit.testCase({
                                 data.img('Item Walle', function(err, retreived) {
                                         // console.log('2: ' + retreived);
                                         assert.ok(retreived, 'Spiegami retreived...');
+                                        // console.log('done');
                                         test.done();
                                 });
                         });
                 });
         },
         'count 1 item in the fridge': function(test) {
-                Step(
-
-                function() {
-                        data.add('Item1', new Date(), null, null, this);
-                }, function() {
+                data.add('Item1', new Date(), null, null, function() {
                         data.count(function(err, c) {
                                 c.should.be.eql(1);
+                                // console.log('done');
                                 test.done();
                         });
                 });
         },
         'count 2 items in the fridge': function(test) {
-                Step(
-
-                function() {
-                        data.add('Item1', new Date(), null, null, this);
-                }, function() {
-                        data.add('Item2', new Date(), null, null, this);
-                }, function() {
-                        data.count(function(err, c) {
-                                c.should.be.eql(2);
-                                test.done();
+                data.add('Item1', new Date(), null, null, function() {
+                        data.add('Item2', new Date(), null, null, function() {
+                                data.count(function(err, c) {
+                                        c.should.be.eql(2);
+                                        // console.log('done');
+                                        test.done();
+                                });
                         });
                 });
         },
         'insert duplicate item': function(test) {
-                Step(
-
-                function() {
-                        data.add('Item1', new Date(), null, null, this);
-                }, function() {
-                        data.add('Item1', new Date(), null, null, this);
+                data.add('Item1', new Date(), null, null, function() {
+                        data.add('Item1', new Date(), null, null, function() {
+                                test.done();
+                        });
                 });
-                test.done();
         }
 })
