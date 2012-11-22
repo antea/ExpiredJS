@@ -15,6 +15,7 @@
                 "hiredis": "*",
                 "nodemailer": "*",
                 "nodeunit": "*",
-                "should": "*"
+                "should": "*",
+                "passport-twitter": "*"
         }
 }

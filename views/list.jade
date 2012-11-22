@@ -11,24 +11,27 @@ html
     link(rel='stylesheet', href='/stylesheets/expiredjs.css')
   body
     #page
-        h1 Welcome to ExpiredJS
-        p This is the content of your fridge.
-        button#addButton Add an item
+        h1 Welcome to ExpiredJS, #{request.user ? request.user.id: 'you nobody'}!
+        if !request.user
+            a(href="/auth/twitter") Login on Twitter
+        else
+            p This is the content of your fridge.
+            button#addButton Add an item
 
-        // The firdge list
-        #fridge
+            // The firdge list
+            #fridge
 
-        // The add item dialog
-        #addDialog.hidden
-          p You can add a new item.
-          form#addForm(action='/add', enctype='multipart/form-data', method='POST')
-            .caption Name
-            input#inputName(type='text', name='name')
-            .caption Best before
-            input#inputExpires(type='text', name='expires')
-            .caption Image
-            input#inputImage(type='file', name='image')
-            input(type='submit', value='Add')
+            // The add item dialog
+            #addDialog.hidden
+                p You can add a new item.
+                form#addForm(action='/add', enctype='multipart/form-data', method='POST')
+                    .caption Name
+                    input#inputName(type='text', name='name')
+                    .caption Best before
+                    input#inputExpires(type='text', name='expires')
+                    .caption Image
+                    input#inputImage(type='file', name='image')
+                    input(type='submit', value='Add')
 
-        #imageDialog.hidden
-            img#fullimage(width='300px', height='auto')
+            #imageDialog.hidden
+                img#fullimage(width='300px', height='auto')
