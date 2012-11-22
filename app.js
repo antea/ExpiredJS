@@ -8,11 +8,10 @@ configure(function(conf) {
         var jade = require("jade");
         var http = require("http");
         var data = require("./lib/data-" + conf.data);
-        data.conf = conf;
         var cron = require('cron').CronJob;
         var nodemailer = require("nodemailer");
         var routes = require("./lib/routes");
-        routes.data = data;
+        routes.init(data);
 
         // passport configuration
         passport.serializeUser(function(user, done) {
@@ -110,7 +109,7 @@ configure(function(conf) {
                 app.use(express.errorHandler());
 
                 data.init(conf, function() {
-                        data.populate();
+                        //data.populate();
                 });
                 app.get('/', routes.list);
                 app.get('/list', routes.list);
