@@ -15,15 +15,14 @@ configure(function(conf) {
         routes.data = data;
 
         // passport configuration
-
         passport.serializeUser(function(user, done) {
-//                console.log('serializeUser');
-//                console.log(user);
+                //                console.log('serializeUser');
+                //                console.log(user);
                 done(null, user.id);
         });
 
         passport.deserializeUser(function(id, done) {
-//                console.log('deserializing: ' + id);
+                //                console.log('deserializing: ' + id);
                 done(null, {
                         id: id
                 });
@@ -35,14 +34,55 @@ configure(function(conf) {
                 consumerSecret: 'Bmqxu7ZkCdUG63guBbFp16EPp4b47NNzhdBl0UDmJw',
                 callbackURL: "http://local.host:8888/auth/twitter/callback"
         }, function(token, tokenSecret, profile, done) {
-//                console.log('token: ' + token);
-//                console.log('tokenSecret: ' + tokenSecret);
-//                console.log('profile: ');
-//                console.log(profile);
+                //                console.log('token: ' + token);
+                //                console.log('tokenSecret: ' + tokenSecret);
+                //                console.log('profile: ');
+                //                console.log(profile);
                 done(null, {
                         id: profile.username
                 });
         }));
+        var GoogleStrategy = require('passport-google').Strategy;
+        passport.use(new GoogleStrategy({
+                returnURL: "http://local.host:8888/auth/google/return",
+                realm: "http://local.host:8888"
+        }, function(identifier, profile, done) {
+                //                console.log('identifier: ' + identifier);
+                //                console.log('profile: ');
+                //                console.log(profile);
+                done(null, {
+                        id: profile.displayName
+                });
+        }));
+        var DropboxStrategy = require('passport-dropbox').Strategy;
+        passport.use(new DropboxStrategy({
+                consumerKey: 'isxve2drfie94o4',
+                consumerSecret: 'duqnu0cq0jehzc3',
+                callbackURL: "http://local.host:8888/auth/dropbox/callback"
+        }, function(token, tokenSecret, profile, done) {
+                //                console.log('token: ' + token);
+                //                console.log('tokenSecret: ' + tokenSecret);
+                //                console.log('profile: ');
+                //                console.log(profile);
+                done(null, {
+                        id: profile.displayName
+                });
+        }));
+        var GitHubStrategy = require('passport-github').Strategy;
+        passport.use(new GitHubStrategy({
+                clientID: '9a3e990becb45b35cb28',
+                clientSecret: 'e9bdeab8b45bbf7565ddf0f0511bf0c049bee122',
+                callbackURL: "http://local.host:8888/auth/github/callback"
+        }, function(accessToken, refreshToken, profile, done) {
+                //                console.log('token: ' + token);
+                //                console.log('tokenSecret: ' + tokenSecret);
+                //                console.log('profile: ');
+                //                console.log(profile);
+                done(null, {
+                        id: profile.displayName
+                });
+        }));
+
 
         var app = express();
 
@@ -92,6 +132,40 @@ configure(function(conf) {
                         successRedirect: '/',
                         failureRedirect: '/login'
                 }));
+                // Redirect the user to Google for authentication.  When complete, Google
+                // will redirect the user back to the application at
+                //     /auth/google/return
+                app.get('/auth/google', passport.authenticate('google'));
+
+                // Google will redirect the user to this URL after authentication.  Finish
+                // the process by verifying the assertion.  If valid, the user will be
+                // logged in.  Otherwise, authentication has failed.
+                app.get('/auth/google/return', passport.authenticate('google', {
+                        successRedirect: '/',
+                        failureRedirect: '/login'
+                }));
+                app.get('/auth/dropbox', passport.authenticate('dropbox'), function(req, res) {
+                        // The request will be redirected to Dropbox for authentication, so this
+                        // function will not be called.
+                });
+
+                app.get('/auth/dropbox/callback', passport.authenticate('dropbox', {
+                        failureRedirect: '/login'
+                }), function(req, res) {
+                        // Successful authentication, redirect home.
+                        res.redirect('/');
+                });
+                app.get('/auth/github', passport.authenticate('github'), function(req, res) {
+                        // The request will be redirected to GitHub for authentication, so this
+                        // function will not be called.
+                });
+
+                app.get('/auth/github/callback', passport.authenticate('github', {
+                        failureRedirect: '/login'
+                }), function(req, res) {
+                        // Successful authentication, redirect home.
+                        res.redirect('/');
+                });
         });
 
         app.configure('development', function() {

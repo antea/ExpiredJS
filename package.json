@@ -16,6 +16,9 @@
                 "nodemailer": "*",
                 "nodeunit": "*",
                 "should": "*",
-                "passport-twitter": "*"
+                "passport-twitter": "*",
+                "passport-google": "*",
+                "passport-dropbox": "*",
+                "passport-github": "*"
         }
 }

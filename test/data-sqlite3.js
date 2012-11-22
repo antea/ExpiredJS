@@ -5,7 +5,7 @@ var Step = require("step");
 var fs = require("fs");
 var assert = require("assert");
 
-exports['data'] = nodeunit.testCase({
+exports['sqlite3'] = nodeunit.testCase({
         setUp: function(callback) {
                 data.init({
                         sqlite3_url: ':memory:'
