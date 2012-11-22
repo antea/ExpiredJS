@@ -119,6 +119,10 @@ configure(function(conf) {
                 app.get('/del/:name', routes.del);
                 app.get('/img/:name', routes.img);
                 app.get('/thumb/:name', routes.thumb);
+                app.get('/logout', function(req, res) {
+                        req.logout();
+                        res.redirect('/');
+                });
                 // Redirect the user to Twitter for authentication.  When complete, Twitter
                 // will redirect the user back to the application at
                 //   /auth/twitter/callback
@@ -159,7 +163,6 @@ configure(function(conf) {
                         // The request will be redirected to GitHub for authentication, so this
                         // function will not be called.
                 });
-
                 app.get('/auth/github/callback', passport.authenticate('github', {
                         failureRedirect: '/login'
                 }), function(req, res) {

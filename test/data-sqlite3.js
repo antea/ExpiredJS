@@ -4,6 +4,7 @@ require("should");
 var Step = require("step");
 var fs = require("fs");
 var assert = require("assert");
+var user = 'tesatuser';
 
 exports['sqlite3'] = nodeunit.testCase({
         setUp: function(callback) {
@@ -19,9 +20,9 @@ exports['sqlite3'] = nodeunit.testCase({
         },
         'insert duplicate item': function(test) {
                 // console.log('adding first');
-                data.add('Item1', new Date(), null, null, function() {
+                data.add(user, 'Item1', new Date(), null, null, function() {
                         // console.log('adding second');
-                        data.add('Item1', new Date(), null, null, function() {
+                        data.add(user, 'Item1', new Date(), null, null, function() {
                                 // console.log('done');
                                 test.done();
                         });
@@ -31,9 +32,9 @@ exports['sqlite3'] = nodeunit.testCase({
                 // console.log('1');
                 fs.readFile('test/walle.jpg', function(err, image) {
                         // console.log('2');
-                        data.add('Item Walle', new Date(), image, null, function() {
+                        data.add(user, 'Item Walle', new Date(), image, null, function() {
                                 // console.log('1: ' + image);
-                                data.img('Item Walle', function(err, retreived) {
+                                data.img(user, 'Item Walle', function(err, retreived) {
                                         // console.log('2: ' + retreived);
                                         assert.ok(retreived, 'Spiegami retreived...');
                                         // console.log('done');
@@ -43,7 +44,7 @@ exports['sqlite3'] = nodeunit.testCase({
                 });
         },
         'count empty fridge': function(test) {
-                data.count(function(err, c) {
+                data.count(user, function(err, c) {
                         c.should.be.eql(0);
                         // console.log('done');
                         test.done();
@@ -54,10 +55,10 @@ exports['sqlite3'] = nodeunit.testCase({
 
                 function() {
                         // console.log('1');
-                        data.add('Item1', new Date(), null, null, this);
+                        data.add(user, 'Item1', new Date(), null, null, this);
                 }, function() {
                         // console.log('2');
-                        data.count(function(err, c) {
+                        data.count(user, function(err, c) {
                                 // console.log('3');
                                 c.should.be.eql(1);
                                 // console.log('done');
@@ -69,11 +70,11 @@ exports['sqlite3'] = nodeunit.testCase({
                 Step(
 
                 function() {
-                        data.add('Item1', new Date(), null, null, this);
+                        data.add(user, 'Item1', new Date(), null, null, this);
                 }, function() {
-                        data.add('Item2', new Date(), null, null, this);
+                        data.add(user, 'Item2', new Date(), null, null, this);
                 }, function() {
-                        data.count(function(err, c) {
+                        data.count(user, function(err, c) {
                                 c.should.be.eql(2);
                                 // console.log('done');
                                 test.done();
