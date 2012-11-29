@@ -58,6 +58,7 @@ $(document).ready(function() {
 
   $("#addForm").submit(function(ev) {
     $("#addDialog").dialog("close");
+    $(':input','#addDialog').not(':submit').val('')
     return false;
   });
 
