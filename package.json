@@ -16,6 +16,7 @@
                 "nodemailer": "*",
                 "nodeunit": "*",
                 "should": "*",
+                "passport": "*",
                 "passport-twitter": "*",
                 "passport-google": "*",
                 "passport-dropbox": "*",
