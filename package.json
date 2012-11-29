@@ -20,6 +20,7 @@
                 "passport-twitter": "*",
                 "passport-google": "*",
                 "passport-dropbox": "*",
-                "passport-github": "*"
+                "passport-github": "*",
+                "mongoose": "*"
         }
 }
