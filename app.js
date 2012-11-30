@@ -31,7 +31,7 @@ configure(function(conf) {
         passport.use(new TwitterStrategy({
                 consumerKey: '2bXbSZbZ4SFUc2fPsfpqLQ',
                 consumerSecret: 'Bmqxu7ZkCdUG63guBbFp16EPp4b47NNzhdBl0UDmJw',
-                callbackURL: "http://local.host:8888/auth/twitter/callback"
+                callbackURL: conf.url + "auth/twitter/callback"
         }, function(token, tokenSecret, profile, done) {
                 //                console.log('token: ' + token);
                 //                console.log('tokenSecret: ' + tokenSecret);
@@ -43,8 +43,8 @@ configure(function(conf) {
         }));
         var GoogleStrategy = require('passport-google').Strategy;
         passport.use(new GoogleStrategy({
-                returnURL: "http://local.host:8888/auth/google/return",
-                realm: "http://local.host:8888"
+                returnURL: conf.url + "auth/google/return",
+                realm: conf.url
         }, function(identifier, profile, done) {
                 //                console.log('identifier: ' + identifier);
                 //                console.log('profile: ');
@@ -57,7 +57,7 @@ configure(function(conf) {
         passport.use(new DropboxStrategy({
                 consumerKey: 'isxve2drfie94o4',
                 consumerSecret: 'duqnu0cq0jehzc3',
-                callbackURL: "http://local.host:8888/auth/dropbox/callback"
+                callbackURL: conf.url + "auth/dropbox/callback"
         }, function(token, tokenSecret, profile, done) {
                 //                console.log('token: ' + token);
                 //                console.log('tokenSecret: ' + tokenSecret);
@@ -71,7 +71,7 @@ configure(function(conf) {
         passport.use(new GitHubStrategy({
                 clientID: '9a3e990becb45b35cb28',
                 clientSecret: 'e9bdeab8b45bbf7565ddf0f0511bf0c049bee122',
-                callbackURL: "http://local.host:8888/auth/github/callback"
+                callbackURL: conf.url + "auth/github/callback"
         }, function(accessToken, refreshToken, profile, done) {
                 //                console.log('token: ' + token);
                 //                console.log('tokenSecret: ' + tokenSecret);
