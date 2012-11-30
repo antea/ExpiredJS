@@ -15,40 +15,31 @@ configure(function(conf) {
 
         // passport configuration
         passport.serializeUser(function(user, done) {
-                //                console.log('serializeUser');
-                //                console.log(user);
                 done(null, user.id);
         });
 
         passport.deserializeUser(function(id, done) {
-                //                console.log('deserializing: ' + id);
                 done(null, {
                         id: id
                 });
         });
 
+        var url = process.env.URL || "http://local.host:8888"
         var TwitterStrategy = require('passport-twitter').Strategy;
         passport.use(new TwitterStrategy({
                 consumerKey: '2bXbSZbZ4SFUc2fPsfpqLQ',
                 consumerSecret: 'Bmqxu7ZkCdUG63guBbFp16EPp4b47NNzhdBl0UDmJw',
-                callbackURL: conf.url + "auth/twitter/callback"
+                callbackURL: url + "/auth/twitter/callback"
         }, function(token, tokenSecret, profile, done) {
-                //                console.log('token: ' + token);
-                //                console.log('tokenSecret: ' + tokenSecret);
-                //                console.log('profile: ');
-                //                console.log(profile);
                 done(null, {
                         id: profile.username
                 });
         }));
         var GoogleStrategy = require('passport-google').Strategy;
         passport.use(new GoogleStrategy({
-                returnURL: conf.url + "auth/google/return",
+                returnURL: url + "/auth/google/return",
                 realm: conf.url
         }, function(identifier, profile, done) {
-                //                console.log('identifier: ' + identifier);
-                //                console.log('profile: ');
-                //                console.log(profile);
                 done(null, {
                         id: profile.displayName
                 });
@@ -57,12 +48,8 @@ configure(function(conf) {
         passport.use(new DropboxStrategy({
                 consumerKey: '5733f6vti98glrx',
                 consumerSecret: 'qzwof8butehdcoj',
-                callbackURL: conf.url + "auth/dropbox/callback"
+                callbackURL: url + "/auth/dropbox/callback"
         }, function(token, tokenSecret, profile, done) {
-                //                console.log('token: ' + token);
-                //                console.log('tokenSecret: ' + tokenSecret);
-                //                console.log('profile: ');
-                //                console.log(profile);
                 done(null, {
                         id: profile.displayName
                 });
@@ -71,12 +58,8 @@ configure(function(conf) {
         passport.use(new GitHubStrategy({
                 clientID: '9a3e990becb45b35cb28',
                 clientSecret: 'e9bdeab8b45bbf7565ddf0f0511bf0c049bee122',
-                callbackURL: conf.url + "auth/github/callback"
+                callbackURL: url + "/auth/github/callback"
         }, function(accessToken, refreshToken, profile, done) {
-                //                console.log('token: ' + token);
-                //                console.log('tokenSecret: ' + tokenSecret);
-                //                console.log('profile: ');
-                //                console.log(profile);
                 done(null, {
                         id: profile.displayName
                 });
