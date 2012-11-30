@@ -55,8 +55,8 @@ configure(function(conf) {
         }));
         var DropboxStrategy = require('passport-dropbox').Strategy;
         passport.use(new DropboxStrategy({
-                consumerKey: 'isxve2drfie94o4',
-                consumerSecret: 'duqnu0cq0jehzc3',
+                consumerKey: '5733f6vti98glrx',
+                consumerSecret: 'qzwof8butehdcoj',
                 callbackURL: conf.url + "auth/dropbox/callback"
         }, function(token, tokenSecret, profile, done) {
                 //                console.log('token: ' + token);
